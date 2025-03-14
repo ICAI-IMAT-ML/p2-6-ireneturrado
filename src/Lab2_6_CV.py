@@ -1,3 +1,5 @@
+import numpy as np
+
 def cross_validation(model, X, y, nFolds):
     """
     Perform cross-validation on a given machine learning model to evaluate its performance.
@@ -45,25 +47,35 @@ def cross_validation(model, X, y, nFolds):
         nFolds = X.shape[0]
 
     # TODO: Calculate fold_size based on the number of folds
-    fold_size = None
+    n_samples = X.shape[0]
+    fold_size = n_samples // nFolds
 
     # TODO: Initialize a list to store the accuracy values of the model for each fold
     accuracy_scores = []
 
     for i in range(nFolds):
         # TODO: Generate indices of samples for the validation set for the fold
-        valid_indices = None
+        inicio = i*fold_size #primer índice del fold de validacion
+        fin = (i+1)*fold_size if i < (nFolds-1) else n_samples #último índice del fold
+        valid_indices = np.arange(inicio, fin)
 
         # TODO: Generate indices of samples for the training set for the fold
-        train_indices = None
+        train_indices = np.concatenate([np.arange(0, inicio), np.arange(fin, n_samples)]) #concateno los índices de antes y después del conjunto de validación para formar el conjunto de entrenamiento
 
         # TODO: Split the dataset into training and validation
-        X_train, X_valid = None, None
-        y_train, y_valid = None, None
+        X_train, X_valid = X[train_indices], X[valid_indices]
+        y_train, y_valid = y[train_indices], y[valid_indices]
 
         # TODO: Train the model with the training set
+        model.fit(X_train, y_train) #entrenamos el modelo con los datos de entrenamiento
 
         # TODO: Calculate the accuracy of the model with the validation set and store it in accuracy_scores
+        accuracy_score = model.score(X_valid, y_valid) #con .score se evalua el rendimiento del modelo en los datos de validación: 
+                                                    # En clasificación, devuelve la precisión (accuracy) y en regresión el coeficiente R^2
+        accuracy_scores.append(accuracy_score) #almaceno en una lista para luego hacer la media y desv 
 
     # TODO: Return the mean and standard deviation of the accuracy_scores
-    return None, None
+    mean = np.mean(accuracy_scores)
+    std = np.std(accuracy_scores)
+
+    return mean, std
