@@ -60,7 +60,8 @@ def cross_validation(model, X, y, nFolds):
         valid_indices = np.arange(inicio, fin)
 
         # TODO: Generate indices of samples for the training set for the fold
-        train_indices = np.concatenate([np.arange(0, inicio), np.arange(fin, n_samples)]) #concateno los índices de antes y después del conjunto de validación para formar el conjunto de entrenamiento
+        train_indices = np.concatenate([np.arange(0, inicio), np.arange(fin, n_samples)]) #concateno los índices de antes
+        # y después del conjunto de validación para formar el conjunto de entrenamiento
 
         # TODO: Split the dataset into training and validation
         X_train, X_valid = X[train_indices], X[valid_indices]
